@@ -1,14 +1,13 @@
-/// <reference path="TSDef/p5.global-mode.d.ts" />
-
-var y = 0;
+const tiles = [];
 
 function setup() {
-  noStroke();
-  createCanvas(500, 450);
+  tiles[0]
 }
 
+function setup(){
+  createCanvas(400,400);
+}
 
 function draw() {
-  background('darkblue');
-  ellipse(width/2, Height ,50, 50);
+  background(151);
 }
