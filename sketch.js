@@ -1,3 +1,5 @@
+/// <reference path="TSDef/p5.global-mode.d.ts" />
+
 var y = 0;
 
 function setup() {
@@ -8,5 +10,5 @@ function setup() {
 
 function draw() {
   background('darkblue');
-  ellipse(width/2, height/2, 50, 50);
+  ellipse(width/2, Height ,50, 50);
 }
