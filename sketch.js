@@ -58,6 +58,7 @@ function preload() {
 function setup(){
   createCanvas(400,400);
 
+  //[1.]
   //All cells star in an inactive state
   createGrid();
   
