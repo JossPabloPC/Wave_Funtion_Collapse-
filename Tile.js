@@ -6,5 +6,8 @@ class Tile{
         this.right      = [];
         this.down       = [];
         this.left       = [];
+        if( i !== undefined){
+            this.index = i;
+        }
     }
 }

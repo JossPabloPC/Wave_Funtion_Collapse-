@@ -1,7 +1,7 @@
 /// <reference path="TSDef/p5.global-mode.d.ts" />
 
 //Tile images
-const tiles = [];
+const image_tiles = [];
 
 //State of each cell
 const grid  = [];
@@ -47,18 +47,24 @@ function collapseCell(){
 ///ALGORITHM
 
 function preload() {
+  //[1.]
   //Loading the tile images
-  tiles[0] = loadImage("Tiles/Corners/00_Empty.png")
-  tiles[1] = loadImage("Tiles/Corners/01_Up.png")
-  tiles[2] = loadImage("Tiles/Corners/02_Right.png")
-  tiles[3] = loadImage("Tiles/Corners/03_Down.png")
-  tiles[4] = loadImage("Tiles/Corners/04_Left.png")
+  const path = 'Tiles/Corners'
+  for(let i = 0; i < 13; i++){
+    image_tiles[i] = loadImage("${path}/0${i}.png")
+  }
 }
 
 function setup(){
   createCanvas(400,400);
-
   //[1.]
+  //Load and creating the tiles 
+  tiles[0] = new Tile(image_tiles[0],[0,0,0,0])
+  tiles[1] = new Tile(image_tiles[0],[1,1,0,1])
+  tiles[2] = new Tile(image_tiles[0],[1,1,1,0])
+  tiles[3] = new Tile(image_tiles[0],[0,1,1,1])
+  tiles[4] = new Tile(image_tiles[0],[1,0,1,1])
+  //[2.]
   //All cells star in an inactive state
   createGrid();
   
