@@ -3,12 +3,15 @@
 //Tile images
 const image_tiles = [];
 
+//Flag to stop the algorithm
+let should_stop = false;
+
 //Array of tiles
 let tiles = []
 
 //State of each cell
 const grid  = [];
-const DIM   = 2;
+const DIM   = 50;
 
 //Possible cell states 
 const BLANCK = 0;
@@ -19,33 +22,58 @@ const LEFT  = 4;
 
 /////FUNCTIONS
 function createGrid(grid){
-  for(let i = 0; i < DIM * DIM; i++){
-    grid[i] = new Cell(tiles.length)
+  for(let j = 0; j < DIM; j++){
+    for(let i = 0; i < DIM; i++ ){
+      grid[i + j * DIM] = new Cell(tiles.length, i, j)
+    }
   }
 }
 
 function getCellWithLeastEntropy(){
   //Cell with the least entropy
   gridCopy = grid.slice();  //Copies the grid
+  gridCopy = gridCopy.filter(noCollapsed => noCollapsed.is_Collapsed == false)
   gridCopy.sort((a,b) => {
     return a.possible_options.length - b.possible_options.length;
   })
+  if(gridCopy.length == 0){
+    should_stop = true;
+    return;
+  }
   let minEntropy = gridCopy[0].possible_options.length
   gridCopy = gridCopy.filter(min => min.possible_options.length == minEntropy)
   return gridCopy;
 }
 
-function collapseCell(){
+function collapseCell(grid){
     //[4.]
     //Cell with the least entropy
-    gridCopy              = getCellWithLeastEntropy();    //Gets the group of the cells with the least entropy
+    gridCopy                          = getCellWithLeastEntropy(grid);             //Gets the group of the cells with the least entropy
+    //console.log(gridCopy);
     //[5.]
-    const cellChosen      = random(gridCopy);             //Picks a random cell from the group
-    cellChosen.is_Collapsed  = true;                         //Collapses the cell
+    const cellChosen                  = random(gridCopy);                      //Picks a random cell from the group
+    const x                           = cellChosen.x
+    const y                           = cellChosen.y
+
+    if(should_stop){
+      should_stop = true;
+      return;
+    }
+
+    grid[x + y * DIM].is_Collapsed    = true;                                  //Collapses the cell
     //[6.]
-    const pick            = random(cellChosen.possible_options);   //Choses an option from the options pool
-    cellChosen.possible_options    = [pick];                       //Assigns the iption to the hosen cell
+    const pick                        = random(cellChosen.possible_options);   //Choses an option from the options pool
+    grid[x + y * DIM].possible_options= [pick];                                //Assigns the iption to the hosen cell
   
+}
+
+function updateEntropy(grid){
+  for(let j = 0; j < DIM; j++){
+    for(let i = 0; i < DIM; i++ ){
+      let cell = grid[i + j * DIM]
+      cell.check_valid_options(grid, tiles)
+    }
+  }
 }
 ///ALGORITHM
 
@@ -89,9 +117,9 @@ function draw() {
   
   //[4.] - [5.] - [6.]
   //Collapses the cell with the least entropy
-  collapseCell();
+  collapseCell(grid);
 
-
+  updateEntropy(grid, tiles);
   //Dimesion f the grid
   const w = width  / DIM;
   const h = height / DIM;
@@ -99,7 +127,6 @@ function draw() {
   for(let j = 0; j < DIM; j++){
     for(let i = 0; i < DIM; i++ ){
       let cell = grid[i + j * DIM]
-      console.log(cell);
       //If the cell has been collapsed
       if(cell.is_Collapsed){
         let index = cell.possible_options[0];
@@ -111,6 +138,12 @@ function draw() {
         rect(i * w, j * h, w , h)
       }
     }
-
+  }
+  if(should_stop){
+  noLoop();
   }
 }
+
+function mousePressed() {
+  draw();
+};
