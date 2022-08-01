@@ -11,7 +11,7 @@ let tiles = []
 
 //State of each cell
 const grid  = [];
-const DIM   = 50;
+const DIM   = 10;
 
 //Possible cell states 
 const BLANCK = 0;
@@ -87,7 +87,7 @@ function preload() {
 }
 
 function setup(){ //Start en Unity
-  createCanvas(400,400);
+  createCanvas(500,500);
   //[1.]
   //Load and creating the tiles 
   tiles[0] = new Tile(image_tiles[0],[0,0,0,0])
